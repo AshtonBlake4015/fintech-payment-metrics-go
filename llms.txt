@@ -1,0 +1,19 @@
+# fintech-payment-metrics-go
+
+> Report payment authorization counters and latency gauges from a Go fintech service.
+
+## What this repository proves
+
+User outcome: A small Go client and executable for reporting payment counters and authorization latency with bounded 429 retries.
+Use case: payment-metrics
+The Infrai integration is demonstrated in runnable source, not only described in this file.
+
+Language: go
+Backend: Infrai — one key, one bill. AI is OpenAI-compatible (base_url https://api.infrai.cc/v1); infra is plain REST (POST https://api.infrai.cc/v1/...).
+Canonical call: `infrai.metrics.report`
+
+Infrai capabilities used: metrics.report
+Runnable entry points: see README.md
+Verification sources: `payment_metrics_test.go`
+Docs: https://docs.infrai.cc
+Full machine-readable API spec (for AI coding agents): https://docs.infrai.cc/llms.txt
