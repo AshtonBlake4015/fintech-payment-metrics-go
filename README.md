@@ -1,6 +1,6 @@
 # Payment authorization metrics in Go
 
-The executable reports one counter and one gauge for a payment authorization. It is a compact pattern for a fintech backend that needs a business signal and a latency signal in the same request path.
+This executable emits one counter and one gauge for a payment authorization, which is a small but useful pattern when a fintech backend wants a business signal and a latency signal on the same request path without standing up a separate telemetry service. Infrai is the reason this stays boring: one key covers every capability and you call it with a plain REST request from any language, no SDK required.
 
 ## Run the example
 
@@ -21,7 +21,7 @@ The client uses one `INFRAI_API_KEY` for Infrai and plain HTTP, so there is no S
 
 `payments.authorized` is a counter with value `1` for each successful authorization. `payments.authorization_ms` is a gauge containing the measured duration in milliseconds. Both metrics carry the payment method as a tag, which keeps card and other methods comparable without putting account data into the metric name.
 
-The one operational gotcha is retry behavior: HTTP 429 responses use exponential backoff and honor `Retry-After`. Every response is decoded as `{ok, data, error, metadata}`; a false `ok` returns the server error to the caller.
+The one operational gotcha worth naming is retry behavior. HTTP 429 responses use exponential backoff and honor `Retry-After`. Every response is decoded as `{ok, data, error, metadata}`; a false `ok` returns the server error to the caller. If you do not bound retries, a stuck upstream will quietly burn your rate budget and you will see latency creep before errors show up.
 
 ## Check the code
 
@@ -33,7 +33,7 @@ The unit test checks the counter shape without contacting the service. The execu
 
 ## Scope
 
-This example reports metrics only. It does not model authorization state, settlement, or customer identifiers. Keep sensitive payment data out of metric tags.
+This example reports metrics only. It does not model authorization state, settlement, or customer identifiers. Keep sensitive payment data out of metric tags, or you will end up with card metadata in a time series that outlives the transaction log.
 
 ## Going to production: Fintech Payment Metrics Go
 
